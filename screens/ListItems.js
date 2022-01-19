@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, ListItem } from "react-native-elements";
+import { db } from "../firebase";
 
 const ListItems = ({ id, chatName, enterChat }) => {
   return (
-    <ListItem>
+    <ListItem bottomDivider>
       <Avatar
         rounded
         source={{
@@ -12,7 +13,9 @@ const ListItems = ({ id, chatName, enterChat }) => {
         }}
       />
       <ListItem.Content>
-        <ListItem.Title style={{ fontWeight: "800 " }}>chats</ListItem.Title>
+        <ListItem.Title style={{ fontWeight: "800 " }}>
+          {chatName}
+        </ListItem.Title>
         <ListItem.Subtitle numberOfLines={1} ellipsizeMode="tail">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab nihil
           harum sequi corrupti cupiditate, velit voluptates aspernatur eum vero

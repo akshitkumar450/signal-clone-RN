@@ -81,12 +81,27 @@ const Home = ({ navigation }) => {
   }, []);
   console.log(chats);
 
+  //   passing this fn to listitems ,where it get called with id and chatname
+  const enterChat = (id, chatName) => {
+    // passing the params to component in which we are going during the transition to new page
+    navigation.navigate("ChatScreen", {
+      id: id,
+      chatName: chatName,
+    });
+  };
   return (
     <SafeAreaView>
       <ScrollView style={styles.container}>
         <Button title="logout" onPress={logout} />
         {chats.map(({ chatName, id }) => {
-          return <ListItems key={id} id={id} chatName={chatName} />;
+          return (
+            <ListItems
+              key={id}
+              enterChat={enterChat}
+              id={id}
+              chatName={chatName}
+            />
+          );
         })}
       </ScrollView>
     </SafeAreaView>

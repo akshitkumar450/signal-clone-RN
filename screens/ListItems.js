@@ -1,11 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Avatar, ListItem } from "react-native-elements";
-import { db } from "../firebase";
 
 const ListItems = ({ id, chatName, enterChat }) => {
   return (
-    <ListItem bottomDivider>
+    <ListItem bottomDivider onPress={() => enterChat(id, chatName)}>
       <Avatar
         rounded
         source={{

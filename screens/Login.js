@@ -30,7 +30,9 @@ const Login = ({ navigation }) => {
     };
   }, []);
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}>
       <StatusBar style="light" />
       <Image
         source={{

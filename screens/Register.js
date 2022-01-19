@@ -26,7 +26,9 @@ const Register = ({ navigation }) => {
     }
   };
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}>
       <Text h4 style={{ marginBottom: 20 }}>
         Create a Signal Account
       </Text>

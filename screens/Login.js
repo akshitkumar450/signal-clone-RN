@@ -1,12 +1,34 @@
 import { StyleSheet, Text, View, KeyboardAvoidingView } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Input, Image } from "react-native-elements";
 import { StatusBar } from "expo-status-bar";
+import { auth } from "../firebase";
 
-const Login = () => {
+// navigation is the prop which is passed by  nagivator
+const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const signIn = () => {};
+
+  const signIn = async () => {
+    try {
+      const authUser = await auth.signInWithEmailAndPassword(email, password);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  useEffect(() => {
+    const unsub = auth.onAuthStateChanged((authUser) => {
+      console.log(authUser);
+      if (authUser) {
+        navigation.replace("Home");
+      }
+    });
+
+    return () => {
+      unsub();
+    };
+  }, []);
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
       <StatusBar style="light" />
@@ -34,7 +56,12 @@ const Login = () => {
       </View>
       {/**react native elements have container style instead of style */}
       <Button containerStyle={styles.btn} onPress={signIn} title="Login" />
-      <Button containerStyle={styles.btn} title="Register" type="outline" />
+      <Button
+        containerStyle={styles.btn}
+        onPress={() => navigation.navigate("Register")}
+        title="Register"
+        type="outline"
+      />
       <View style={{ height: 10 }}></View>
     </KeyboardAvoidingView>
   );

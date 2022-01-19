@@ -52,6 +52,7 @@ const Login = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
           secureTextEntry
           type="password"
+          onSubmitEditing={signIn}
         />
       </View>
       {/**react native elements have container style instead of style */}

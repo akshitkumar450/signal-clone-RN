@@ -10,7 +10,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Avatar, Input } from "react-native-elements";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { auth, db } from "../firebase";
@@ -18,6 +18,7 @@ import firebase from "firebase";
 
 const ChatScreen = ({ navigation, route }) => {
   const [input, setInput] = useState("");
+  const [messages, setMessages] = useState([]);
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "Chat",
@@ -69,6 +70,25 @@ const ChatScreen = ({ navigation, route }) => {
     });
     setInput("");
   };
+  // fetching the messages from db with corresponding id
+  useEffect(() => {
+    const unsub = db
+      .collection("chats")
+      .doc(route.params.id)
+      .collection("messages")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot) => {
+        let temp = [];
+        snapshot.docs.forEach((doc) => {
+          temp.push({ ...doc.data(), id: doc.id });
+        });
+        setMessages(temp);
+      });
+    return () => {
+      unsub();
+    };
+  }, []);
+  console.log(messages);
   return (
     <SafeAreaView>
       {/**using the params passed from Home page */}
@@ -78,7 +98,34 @@ const ChatScreen = ({ navigation, route }) => {
         keyboardVerticalOffset={90}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <>
-            <ScrollView>{/**chats */}</ScrollView>
+            <ScrollView>
+              {messages.map((message) =>
+                message.email === auth.currentUser.email ? (
+                  <View key={message.id} style={styles.receiver}>
+                    <Avatar
+                      size={30}
+                      rounded
+                      source={{
+                        uri: message.photoURL,
+                      }}
+                    />
+                    <Text style={styles.receiverText}>{message.message}</Text>
+                  </View>
+                ) : (
+                  <View key={message.id} style={styles.sender}>
+                    <Avatar
+                      rounded
+                      source={{
+                        uri: message.photoURL,
+                      }}
+                    />
+                    <Text style={styles.senderText}>
+                      {message.displayName}-{message.message}
+                    </Text>
+                  </View>
+                )
+              )}
+            </ScrollView>
             <View style={styles.footer}>
               <Input
                 containerStyle={styles.input}
@@ -117,5 +164,27 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     padding: 5,
     marginVertical: 20,
+  },
+  receiver: {
+    padding: 15,
+    backgroundColor: "#ececec",
+    alignSelf: "flex-end",
+    borderRadius: 10,
+    marginRight: 15,
+    marginBottom: 20,
+    maxWidth: "80%",
+    position: "relative",
+  },
+  sender: {
+    padding: 15,
+    backgroundColor: "#2b68e6",
+    alignSelf: "flex-start",
+    borderRadius: 20,
+    maxWidth: "80%",
+    position: "relative",
+  },
+  receiverText: {},
+  senderText: {
+    color: "white",
   },
 });

@@ -28,7 +28,7 @@ const ChatScreen = ({ navigation, route }) => {
           <Avatar
             rounded
             source={{
-              uri: "https://blog.mozilla.org/internetcitizen/files/2018/08/signal-logo.png",
+              uri: auth.currentUser.photoURL,
             }}
           />
           <Text style={{ color: "white", marginLeft: 10, fontWeight: "700" }}>
@@ -88,7 +88,8 @@ const ChatScreen = ({ navigation, route }) => {
       unsub();
     };
   }, []);
-  console.log(messages);
+  // console.log(messages);
+  console.log("->>>>>>", auth.currentUser.photoURL);
   return (
     <SafeAreaView>
       {/**using the params passed from Home page */}
@@ -98,15 +99,24 @@ const ChatScreen = ({ navigation, route }) => {
         keyboardVerticalOffset={90}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <>
-            <ScrollView>
+            <ScrollView contentContainerStyle={{ paddingTop: 15 }}>
               {messages.map((message) =>
                 message.email === auth.currentUser.email ? (
                   <View key={message.id} style={styles.receiver}>
                     <Avatar
                       size={30}
                       rounded
+                      //for web
+                      containerStyle={{
+                        position: "absolute",
+                        bottom: -15,
+                        right: -15,
+                      }}
+                      position="absolute"
+                      bottom={-15}
+                      right={-15}
                       source={{
-                        uri: message.photoURL,
+                        uri: message.photo,
                       }}
                     />
                     <Text style={styles.receiverText}>{message.message}</Text>
@@ -115,8 +125,17 @@ const ChatScreen = ({ navigation, route }) => {
                   <View key={message.id} style={styles.sender}>
                     <Avatar
                       rounded
+                      //for web
+                      containerStyle={{
+                        position: "absolute",
+                        bottom: -5,
+                        left: -5,
+                      }}
+                      position="absolute"
+                      bottom={-1}
+                      left={-5}
                       source={{
-                        uri: message.photoURL,
+                        uri: message.photo,
                       }}
                     />
                     <Text style={styles.senderText}>
@@ -183,8 +202,11 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
     position: "relative",
   },
-  receiverText: {},
+  receiverText: {
+    marginBottom: 10,
+  },
   senderText: {
     color: "white",
+    marginBottom: 10,
   },
 });

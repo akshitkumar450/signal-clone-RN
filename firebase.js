@@ -22,3 +22,10 @@ if (firebase.apps.length === 0) {
 const db = app.firestore();
 const auth = firebase.auth();
 export { db, auth };
+
+// firebase deploy for web
+// firebase init
+// web-build
+// expo publish
+// expo build:web (if any change do it again)
+// firebase deploy
